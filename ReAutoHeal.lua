@@ -57,7 +57,7 @@ local function buff1()
     end
     for i = 1, 2 do
         mq.cmd.Target(mq.TLO.Group.Member(i))
-        --mq.cmd.Say("Armor buff  " .. mq.TLO.Group.Member(i))
+        mq.cmd.Say("Armor buff for 'i' ")
         mq.cmd.Cast(3)
         mq.delay(5000)
     end
@@ -71,9 +71,9 @@ local function buff2()
     end
     for i = 1, 2 do
         mq.cmd.Target(mq.TLO.Group.Member(i))
-        --mq.cmd.Say("Blessing buff " .. mq.TLO.Group.Member(i))
+        mq.cmd.Say("Blessing buff for 'i' ")
         mq.cmd.Cast(4)
-        mq.delay(5000)
+        mq.delay(10000)
     end
     print("end of buff 2")
 end
@@ -82,7 +82,7 @@ end
 --while true do
 
     -- Check current conditions
-    if mq.TLO.Group.Member(1).PctHPs() >= 85 and mq.TLO.Me.PctMana() >= 75 or mq.TLO.Group.Member(2).PctHPs() >= 85 and mq.TLO.Me.PctMana() >= 75 then
+    if mq.TLO.Group.Member(1).PctHPs() >= 85 and mq.TLO.Me.PctMana() >= 75 and mq.TLO.Group.Member(2).PctHPs() >= 85 and mq.TLO.Me.PctMana() >= 75 then
         print("Heading to buff1")
         buff1()
         buff2()
@@ -90,12 +90,14 @@ end
 
     -- Heal check --
     print("Running heal check")
-    if mq.TLO.Group.Member(1).PctHPs() < 85 or mq.TLO.Group.Member(1).PctHPs() > 65 or mq.TLO.Group.Member(2).PctHPs() < 85 and mq.TLO.Group.Member(2).PctHPs() > 65 then
+    if mq.TLO.Group.Member(1).PctHPs() < 85 and mq.TLO.Group.Member(1).PctHPs() > 65 or mq.TLO.Group.Member(2).PctHPs() < 85 and mq.TLO.Group.Member(2).PctHPs() > 65 then
         print("Heading to heal 1")
         heal1()
-    elseif mq.TLO.Group.Member(1).PctHPs() <= 65 then
+    elseif mq.TLO.Group.Member(1).PctHPs() <= 65 or mq.TLO.Group.Member(2).PctHPs() <= 65 then
         print("Heading to heal 2")
         heal2()
+    else
+        print("All characters at full health")
     end
 
     if mq.TLO.Me.PctMana() <= 100 then
