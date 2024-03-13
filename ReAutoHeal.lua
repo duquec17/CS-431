@@ -19,7 +19,6 @@ mq.delay(5000)
 -- Start of macro
 print("")
 print("start of macro")
-mq.cmd.Say("${Group.Member[1]} is the tank")
 
 -- All functions definitions --
 -- Heal function 1 when health is slightly low --
@@ -118,20 +117,18 @@ end
 -- Stun debuff function 1 when allies HP 85+, Mana 60+, and  buffs true --
 local function stun1()
    -- Target the tank's target if it exists, otherwise target the last hitter
-   local target = mq.target.AggroHolder()
+   local tank = mq.TLO.Group.Member(1)
+   printf('%s is the tank', tank)
     
-   -- Check if a valid target exists
-   if target then
-       mq.cmd.Target(target)
-       mq.cmd.Cast(7)  -- Assuming spell ID 7 is for stunning
-       print("Stunning enemy")
-       mq.delay(6000)
-       mq.cmd.Cast(8)  -- Assuming spell ID 8 is for damaging
-       print("Damaging enemy")
-       mq.delay(6000)
-   else
-       print("No suitable target found for debuff")
-   end
+   mq.cmd.assist(tank) -- Targets the tank's current target
+
+   mq.cmd.Cast(7)  -- Assuming spell ID 7 is for stunning
+   print("Stunning enemy")
+   mq.delay(6000)
+
+   mq.cmd.Cast(8)  -- Assuming spell ID 8 is for damaging
+   print("Damaging enemy")
+   mq.delay(6000)
 end
 
 -- DMG spell function that occurs after Stun debuff function -- 
@@ -163,7 +160,7 @@ do
     -- End of Heal check -- 
 
     -- Debuff/DMG check -- 
-    if mq.TLO.Group.Member(1).PctHPs() >= 85 and mq.TLO.Me.PctMana() >= 60 mq.TLO.Me.PctMana() >= 60 then
+    if mq.TLO.Group.Member(1).PctHPs() >= 85 and mq.TLO.Me.PctMana() >= 60 then
         stun1()
     else
         print("Not enough resources to debuff")

@@ -6,50 +6,20 @@
 -- 4. When input ends in "${TLONAME.MEMBER[params]." then it will return all available members of the datatype returned by ${TLONAME.MEMBER[params]}.
 -- 5. When input ends in "${TLONAME.MEMBER." then it will return all available members of the datatype returned by ${TLONAME.MEMBER}.
 -- Anything further nested will not populate available options.
-
 local mq = require('mq')
-local actors = require('actors')
-local imgui = require('ImGui')
-
-local isOpen = true
-
-local maxHP = 100;
 
 mq.cmd.Echo('Begin test')
 
-local healthPercent = mq.TLO.Group.Member(1).PctHPs()
-
-
-local function health()
-    mq.cmd.Target(mq.TLO.Group.Member(1))
-    mq.cmd.Cast(2)
-end
-
--- Stun debuff function 1 when allies HP 85+, Mana 60+, and  buffs true --
+-- Function to target the target of group member 1 and cast a spell
 local function stun1()
-        mq.cmd.Target()
-        mq.cmd.Cast(7)  -- Assuming spell ID 7 is for stunning
-        print("Stunning enemy")
-        mq.delay(6000)
-        mq.cmd.Cast(8)  -- Assuming spell ID 8 is for damaging
-        print("Damaging enemy")
-        mq.delay(6000)
-
- end
-
-local function sit()
-        print('should be sitting')
-        mq.cmd.sit()
+    local tank = mq.TLO.Group.Member(1)
+     mq.cmd.assist(tank)
+     printf('%s is the tank', tank)
 end
 
-if healthPercent <= 100 then
-    print("First group member's health: " .. healthPercent .. "%")
-    --health() -- Call the health function here
-
-    if mq.TLO.Me.PctMana() >= 60 and mq.TLO.Me.PctMana() >= 60 then
-        stun1()
-    else
-        print("Not enough resources to debuff")
-    end
-
+-- Check if mana is sufficient before casting the spell
+if mq.TLO.Me.PctMana() <= 100 then
+    stun1()
+else
+    print("Not enough resources to cast the spell")
 end
