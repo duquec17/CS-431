@@ -65,6 +65,10 @@ if($text=~/Hail/i) {
 		quest::say("Ah, so you're ready to face some of the hardest challenges?");
 		quest::say("Then go to the [common lands] and speak the password to my follower");
 		quest::say("The password is, 'Cervezas por mis hermanos.'");
+		if($client->GetLevel() <= 20) {
+			my $lvlVal = $client->GetLevel();
+			quest::level($lvlVal + 10);
+		}
 	}
 ###
 
