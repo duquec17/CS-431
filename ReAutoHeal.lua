@@ -128,6 +128,7 @@ end
 -- DMG spell function that occurs after Stun debuff function -- 
 
 -- Create While loop that ends when macro is ended
+-- MAIN --
 while not terminate 
 do
     -- Check Buff current conditions
