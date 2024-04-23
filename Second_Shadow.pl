@@ -1,7 +1,7 @@
 sub EVENT_SAY {
 	if($text=~/Hail/i) {
 		quest::say("Greetings traveler.");
-		quest::say("Say do you have a taste for [fish]?")
+		quest::say("Say do you have a taste for [fish]?");
 	}
 	elsif($text=~/fish/i){
 	    quest::say("Wonderful!");
@@ -9,7 +9,7 @@ sub EVENT_SAY {
 	    quest::summonitem(13100);
 	    quest::say("And you will need [bait] too.");
 	}
-	elsif($text=~/bait){
+	elsif($text=~/bait/i){
 	    quest::summonitem(13101, 30);
 	    quest::say("Now those fish won't catch themselves!");
 	    quest::say("If they do you won't be the one getting them!");
