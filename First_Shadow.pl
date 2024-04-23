@@ -13,7 +13,7 @@
 #
 #1. When hailed by player will ask for password
 sub EVENT_SPAWN{
-    $npc->SetNPCVariable("Accepted", 0);
+    my $Accepted = 0;
 }
 
 sub EVENT_SAY {
@@ -26,12 +26,12 @@ if($text=~/Hail/i) {
 elsif($text=~/Cervezas por mis hermanos/i) {
 	quest::say("Ah gracias hermano");
 	quest::say("So you are the one that [Jesus] has trusted.")
-	quest::say("However you will still need to prove that you can be trusted with the task!")
+	quest::say("However you will still need to prove that you can be trusted with the task!");
 	quest::say("Bring me thine body of a man that call the hills thine place of rest!");
 	quest::say("Do you [accept]?");
 }
 elsif($text=~/accept/i){
-quest::say("Very well, I will await your return.")
+quest::say("Very well, I will await your return.");
     $npc->SetNPCVariable("Accepted", 1);
 }
 else{
@@ -42,27 +42,27 @@ else{
 
 sub EVENT_ITEM{
 my $visited = $npc->GetNPCVariable("Accepted");
-if (Accepted == 1) {
+if (Accepted == 0) {
     if(plugin::check_handin(\%itemcount, 16539 => 1)) {
         quest::say("I see you have slain the hill giant and brought back all that remains of him!");
-        quest::say("You have proven yourself worthy of the task of heroes.")
-        quest::say("Speak to the one of sand and he will guide you to your next step!")
-        quest::say("Fair well and may God be with you!")
+        quest::say("You have proven yourself worthy of the task of heroes.");
+        quest::say("Speak to the one of sand and he will guide you to your next step!");
+        quest::say("Fair well and may God be with you!");
         if($client->GetLevel() > 40){
             quest::level(40);
         }
         $client->MovePC(35, -1500, -2500, 0);
     }
     else{
-        quest::say("This is not what I seek from you. I want not this ... Thing.")
-        quest::set("Return to me once you have slain and recived the man of the hill's corpse.")
+        quest::say("This is not what I seek from you. I want not this ... Thing.");
+        quest::set("Return to me once you have slain and recived the man of the hill's corpse.");
         plugin::return_items(\$itemcount);
     }
 }
 else{
-    quest::say("What?")
-    quest::say("Why have you given me this?")
-    quest::say("I have no desire for it. leave me if you are only to waste my time.")
+    quest::say("What?");
+    quest::say("Why have you given me this?");
+    quest::say("I have no desire for it. leave me if you are only to waste my time.");
     plugin::return_items(\$itemcount);
 }
 }
