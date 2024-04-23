@@ -25,7 +25,7 @@ if($text=~/Hail/i) {
 }
 elsif($text=~/Cervezas por mis hermanos/i) {
 	quest::say("Ah gracias hermano");
-	quest::say("So you are the one that [Jesus] has trusted.")
+	quest::say("So you are the one that [Jesus] has trusted.");
 	quest::say("However you will still need to prove that you can be trusted with the task!");
 	quest::say("Bring me thine body of a man that call the hills thine place of rest!");
 	quest::say("Do you [accept]?");
