@@ -1,0 +1,55 @@
+Index: ReAutoHeal.lua
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>local mq = require('mq')\r\nlocal actors = require('actors')\r\n\r\n-- Declare variable names & values\r\nlocal ManaWarn = 50\r\nlocal terminate = false;\r\n\r\n-- Check if a target is selected\r\n\r\n\r\n-- Loads spells when starting\r\nmq.cmd.Say('Memorizing spells')\r\nmq.cmd.MemSpellSet('ReAutoHeal')\r\nmq.delay(5000)\r\n\r\n-- Start of macro\r\nprint(\"\")\r\nprint(\"start of macro\")\r\n\r\n-- All functions definitions --\r\n-- Heal function 1 when health is slightly low --\r\nlocal function heal1()\r\n    --print(\"casting healing\")\r\n    if mq.TLO.Group.Member(1).PctHPs() < 85 then\r\n        mq.cmd.Target(mq.TLO.Group.Member(1))\r\n    elseif mq.TLO.Group.Member(2).PctHPs() < 85 then\r\n        mq.cmd.Target(mq.TLO.Group.Member(2))\r\n    end\r\n    \r\n    mq.cmd.Cast(2)\r\n    mq.delay(3000)\r\n    if mq.TLO.Me.Standing() and not mq.TLO.Me.Mount.ID() then\r\n        mq.cmd.Sit()\r\n    end\r\n    mq.delay(5000)\r\n    print(\"end of heal 1\")\r\nend\r\n\r\n-- Heal function 2 when health is very low --\r\nlocal function heal2()\r\n    --print(\"casting Greater healing\")\r\n    if mq.TLO.Group.Member(1).PctHPs() <= 65 then\r\n        mq.cmd.Target(mq.TLO.Group.Member(1))\r\n    elseif mq.TLO.Group.Member(2).PctHPs() <= 65 then\r\n        mq.cmd.Target(mq.TLO.Group.Member(2))\r\n    end\r\n\r\n    mq.cmd.Cast(1)\r\n    mq.delay(3000)\r\n    if mq.TLO.Me.Standing() and not mq.TLO.Me.Mount.ID() then\r\n        mq.cmd.Sit()\r\n    end\r\n    mq.delay(3000)\r\n    print(\"end of heal 2\")\r\nend\r\n\r\n-- Buff function 1 that checks and applies 1st buff --\r\nlocal function buff1()\r\n-- Check if Spirit Armor buff is already applied\r\n    if mq.TLO.Target.Buff('Spirit Armor').ID() then\r\n        print(\"Armor buff already applied\")\r\n    else\r\n        for i = 1, 2 do\r\n            mq.cmd.Target(mq.TLO.Group.Member(i))\r\n            mq.cmd.Cast(3)\r\n            mq.delay(8000)\r\n        end\r\n    end\r\n   \r\nend\r\n\r\n-- Buff function 2 that checks and applies 2nd buff --\r\nlocal function buff2()\r\n    if mq.TLO.Target.Buff('Reckless Strength').ID() then\r\n        print(\"Strength buff already applied\")\r\n    else\r\n        for i = 1, 2 do\r\n            mq.cmd.Target(mq.TLO.Group.Member(i))\r\n            mq.cmd.Cast(4)\r\n            mq.delay(10000)\r\n        end\r\n    end\r\n    \r\nend\r\n\r\n-- Buff function 3 that checks and applies 3rd buff --\r\nlocal function buff3()\r\n    if mq.TLO.Target.Buff('Symbol of Transal').ID() then\r\n        print(\"Symbol buff already applied\")\r\n    else\r\n        for i = 1, 2 do\r\n            mq.cmd.Target(mq.TLO.Group.Member(i))\r\n            mq.cmd.Cast(5)\r\n            mq.delay(7000)\r\n        end\r\n    end\r\n\r\nend\r\n\r\n-- Buff function 4 that checks and applies 3rd buff --\r\nlocal function buff4()\r\n    if mq.TLO.Target.Buff('Daring').ID() then\r\n        print(\"Shield buff already applied\")\r\n    else\r\n        for i = 1, 2 do\r\n            mq.cmd.Target(mq.TLO.Group.Member(i))\r\n            mq.cmd.Cast(6)\r\n            mq.delay(6000)\r\n        end\r\n    end\r\n\r\nend\r\n\r\n-- Stun debuff function 1 when allies HP 85+, Mana 60+, and  buffs true --\r\nlocal function stun1()\r\n   -- Target the tank's target if it exists, otherwise target the last hitter\r\n   local tank = mq.TLO.Group.Member(1)\r\n    \r\n   mq.cmd.assist(tank) -- Targets the tank's current target\r\n\r\n   mq.cmd.Cast(7)  -- Assuming spell ID 7 is for stunning\r\n   mq.delay(6000)\r\n\r\n   mq.cmd.Cast(8)  -- Assuming spell ID 8 is for damaging\r\n   mq.delay(6000)\r\nend\r\n\r\n-- DMG spell function that occurs after Stun debuff function -- \r\n\r\n-- Create While loop that ends when macro is ended\r\nwhile not terminate \r\ndo\r\n    -- Check Buff current conditions\r\n    if mq.TLO.Group.Member(1).PctHPs() >= 85 and mq.TLO.Me.PctMana() >= 75 and mq.TLO.Group.Member(2).PctHPs() >= 85 and mq.TLO.Me.PctMana() >= 75 then\r\n        buff1()\r\n        buff2()\r\n        buff3()\r\n        buff4()\r\n\r\n        --print(\"Moving to Heal Check\")\r\n        \r\n        if mq.TLO.Me.Standing() and not mq.TLO.Me.Mount.ID() then\r\n            mq.cmd.Sit()\r\n        end\r\n        mq.delay(3000)\r\n    end\r\n\r\n    -- Heal check --\r\n    --print(\"Running heal check\")\r\n    if mq.TLO.Group.Member(1).PctHPs() < 85 and mq.TLO.Group.Member(1).PctHPs() > 65 or mq.TLO.Group.Member(2).PctHPs() < 85 and mq.TLO.Group.Member(2).PctHPs() > 65 then\r\n        heal1()\r\n    elseif mq.TLO.Group.Member(1).PctHPs() <= 65 or mq.TLO.Group.Member(2).PctHPs() <= 65 then\r\n        heal2()\r\n    elseif mq.TLO.Group.Member(1).PctHPs() == 100 and mq.TLO.Me.PctMana() == 100 then\r\n        print(\"All characters at full health\")\r\n        terminate = true;\r\n    end\r\n    -- End of Heal check -- \r\n\r\n    -- Debuff/DMG check -- \r\n    if mq.TLO.Group.Member(1).PctHPs() >= 85 and mq.TLO.Me.PctMana() >= 60 then\r\n        stun1()\r\n    elseif mq.TLO.Me.PctMana() <= 60 then\r\n        --print(\"Not enough resources to debuff\")\r\n    end\r\n\r\n    -- Mana call out --\r\n    if mq.TLO.Me.PctMana() <= 30 then\r\n        mq.cmd.Say(\"My mana is at \" .. mq.TLO.Me.PctMana() .. \" percent.\")\r\n        mq.cmd.Sit()\r\n        terminate = true;\r\n    end\r\n    -- Checks to see whether to terminate script --\r\nend\r\nreturn
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ReAutoHeal.lua b/ReAutoHeal.lua
+--- a/ReAutoHeal.lua	(revision 209a360e4bb6c7db3bab7e13f6771feb9902d2a0)
++++ b/ReAutoHeal.lua	(date 1710430794899)
+@@ -128,6 +128,7 @@
+ -- DMG spell function that occurs after Stun debuff function -- 
+ 
+ -- Create While loop that ends when macro is ended
++-- MAIN --
+ while not terminate 
+ do
+     -- Check Buff current conditions
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+new file mode 100644
+--- /dev/null	(date 1710430766736)
++++ b/.idea/vcs.xml	(date 1710430766736)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="$PROJECT_DIR$" vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
+Index: SWMF1.lua
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/SWMF1.lua b/SWMF1.lua
+new file mode 100644
+--- /dev/null	(date 1713277126480)
++++ b/SWMF1.lua	(date 1713277126480)
+@@ -0,0 +1,9 @@
++local mq = require('mq')
++local actors = require('actors')
++
++-- Declare variable names & values
++local password = "Orange Juice"
++
++-- Begone from my sight! Super Space Singularity!
++
++--
+\ No newline at end of file
